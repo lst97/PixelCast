@@ -1,0 +1,77 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Special edit_file Guide for Gemini 2.5 pro in Cursor
+Golden Rule: Treat every edit as a “surgical, precise replacement,” not a “fuzzy adjustment.”
+Principle 1: Replace, Don’t Modify
+
+    Action Guideline: Target the smallest, complete logical block and provide a brand new block to completely replace it.
+    DO:
+        Replace entire lines or whole methods/logical blocks.
+        Example:
+
+    // ... existing code ...
+    public int CalculateTotalPrice() { /* new, improved logic */ }
+    // ... existing code ...
+
+DON’T:
+
+    Try to only change part of a line or just rename a method in place.
+    Example:
+
+        // ... existing code ...
+        CalculateNewTotalPrice() // Only changing the method name—very risky
+        // ... existing code ...
+
+Principle 2: Anchors Must Be Unique
+
+    Action Guideline: The context you use as anchors (e.g., // ... existing code ...) must be unique within the file, just like a fingerprint.
+    DO:
+        Include enough surrounding context to ensure uniqueness.
+        Example:
+
+    // ... existing code ...
+    var result = await _service.GetSpecificData(id);
+    return View(result); // <--- This context combination is likely unique
+    // ... existing code ...
+
+DON’T:
+
+    Use generic or potentially repeated code as an anchor (e.g., just a closing bracket).
+    Example:
+
+        // ... existing code ...
+        } // <--- Highly likely to be a repeated anchor
+        // ... existing code ...
+
+Principle 3: Code Must Be Complete
+
+    Action Guideline: The submitted code_edit must be a syntactically correct, logically self-contained unit. Don’t make the model guess.
+    DO:
+        Make sure the code you submit can be copy-pasted into the IDE without syntax errors.
+    DON’T:
+        Submit incomplete statements.
+        Example:
+
+        // ... existing code ...
+        var user = new User { Name = // <--- Incomplete code
+        // ... existing code ...
+
+Principle 4: Decompose Complex Tasks
+
+    Action Guideline: Large refactors = multiple consecutive, simple, and safe small replacements.
+    DO:
+        First edit_file: Add a new helper method.
+        Second edit_file: Replace the old logic block with code that calls the new method.
+    DON’T:
+        Define a new method and change all its usages in multiple places within a single edit_file operation.
+
+Principle 5: Instructions Must Accurately Describe
+
+    Action Guideline: The instructions parameter should be a one-sentence, precise summary of the code_edit.
+    DO:
+        Example: instructions: "I will replace the user validation logic with a call to the new AuthService."
+    DON’T:
+        Use vague instructions like instructions: "Fix bug" or instructions: "Update code" (too broad and not helpful).
