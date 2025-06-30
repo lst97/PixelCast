@@ -3,6 +3,8 @@ version: "3.8"
 networks:
   pixelcast_network:
     driver: bridge
+  cloudflare_network:
+    external: true
 
 services:
   # SRS Streaming Server
@@ -46,6 +48,7 @@ services:
       - .env
     networks:
       - pixelcast_network
+      - cloudflare_network
 
   # Frontend Service
   frontend:
