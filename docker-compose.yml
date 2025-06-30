@@ -13,7 +13,9 @@ services:
     container_name: pixelcast-srs
     restart: unless-stopped
     volumes:
-      - ./pixel-cast-backend/srs.conf:/usr/local/srs/conf/srs.conf
+      - ./srs.conf:/usr/local/srs/conf/srs.conf:ro
+      - srs_data:/usr/local/srs/objs/nginx/html
+      - srs_logs:/usr/local/srs/objs
     ports:
       - "1935:1935" # RTMP
       - "1985:1985" # HTTP API
@@ -34,7 +36,7 @@ services:
     ports:
       - "3011:3001"
     volumes:
-      - ./pixel-cast-backend:/app
+      - backend_data:/app/data
     depends_on:
       - srs
     environment:
@@ -75,5 +77,8 @@ services:
 
 volumes:
   srs_data:
+    driver: local
+  srs_logs:
+    driver: local
   backend_data:
-  frontend_data:
+    driver: local
