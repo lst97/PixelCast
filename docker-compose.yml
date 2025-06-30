@@ -38,11 +38,6 @@ services:
     depends_on:
       - srs
     environment:
-      - SRS_SERVER_IP=srs
-      - SRS_HTTP_API_URL=http://srs:1985
-      - SRS_RTMP_URL=rtmp://srs:1935
-      - SRS_HLS_URL=http://srs:8080
-      - BACKEND_PORT=3001
       - NODE_ENV=production
     env_file:
       - .env
