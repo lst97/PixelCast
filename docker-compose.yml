@@ -1,5 +1,3 @@
-version: "3.8"
-
 networks:
   pixelcast_network:
     driver: bridge
@@ -29,7 +27,7 @@ services:
       - cloudflare_network
 
   # Backend Service
-  backend:
+  pixelcast-api:
     image: lst97/pixel-cast-backend:latest
     container_name: pixelcast-backend
     restart: unless-stopped
@@ -53,14 +51,14 @@ services:
       - cloudflare_network
 
   # Frontend Service
-  frontend:
+  pixelcast:
     image: lst97/pixel-cast-frontend:latest
     container_name: pixelcast-frontend
     restart: unless-stopped
     ports:
       - "3010:3000"
     depends_on:
-      - backend
+      - pixelcast-api
       - srs
     environment:
       - NEXT_PUBLIC_BACKEND_URL=http://backend:3001
