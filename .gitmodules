@@ -1,0 +1,6 @@
+[submodule "pixel-cast-backend"]
+	path = pixel-cast-backend
+	url = https://github.com/lst97/pixel-cast-backend
+[submodule "pixel-cast-frontend"]
+	path = pixel-cast-frontend
+	url = https://github.com/lst97/pixel-cast-frontend

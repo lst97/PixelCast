@@ -1,0 +1,76 @@
+version: "3.8"
+
+networks:
+  pixelcast_network:
+    driver: bridge
+
+services:
+  # SRS Streaming Server
+  srs:
+    image: ossrs/srs:6
+    container_name: pixelcast-srs
+    restart: unless-stopped
+    volumes:
+      - ./pixel-cast-backend/srs.conf:/usr/local/srs/conf/srs.conf
+    ports:
+      - "1935:1935" # RTMP
+      - "1985:1985" # HTTP API
+      - "8080:8080" # HTTP Server (for demos/players)
+      - "8000:8000/udp" # WebRTC over UDP
+      - "8001:8001/tcp" # WebRTC over TCP (Fallback)
+    environment:
+      - CANDIDATE=srs
+    networks:
+      - pixelcast_network
+      - cloudflare_network
+
+  # Backend Service
+  backend:
+    image: lst97/pixel-cast-backend:latest
+    container_name: pixelcast-backend
+    restart: unless-stopped
+    ports:
+      - "3011:3001"
+    volumes:
+      - ./pixel-cast-backend:/app
+    depends_on:
+      - srs
+    environment:
+      - SRS_SERVER_IP=srs
+      - SRS_HTTP_API_URL=http://srs:1985
+      - SRS_RTMP_URL=rtmp://srs:1935
+      - SRS_HLS_URL=http://srs:8080
+      - BACKEND_PORT=3001
+      - NODE_ENV=production
+    env_file:
+      - .env
+    networks:
+      - pixelcast_network
+
+  # Frontend Service
+  frontend:
+    image: lst97/pixel-cast-frontend:latest
+    container_name: pixelcast-frontend
+    restart: unless-stopped
+    ports:
+      - "3010:3000"
+    depends_on:
+      - backend
+      - srs
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:3001
+      - NEXT_PUBLIC_SRS_HTTP_API_URL=http://srs:1985
+      - NEXT_PUBLIC_SRS_RTMP_URL=rtmp://srs:1935
+      - NEXT_PUBLIC_SRS_HLS_URL=http://srs:8080
+      - NEXT_PUBLIC_SRS_WEBRTC_URL=http://srs:8000
+      - NODE_ENV=production
+    env_file:
+      - .env
+    networks:
+      - pixelcast_network
+      - cloudflare_network
+
+volumes:
+  srs_data:
+  backend_data:
+  frontend_data:
