@@ -60,13 +60,6 @@ services:
     depends_on:
       - pixelcast-api
       - srs
-    # environment:
-    #   - NEXT_PUBLIC_BACKEND_URL=https://pixelcast-api.lst97.dev
-    #   - NEXT_PUBLIC_SRS_HTTP_API_URL=https://srs-api.lst97.dev
-    #   - NEXT_PUBLIC_SRS_RTMP_URL=rtmp://srs-rtmp.lst97.dev
-    #   - NEXT_PUBLIC_SRS_HLS_URL=https://srs.lst97.dev
-    #   - NEXT_PUBLIC_SRS_WEBRTC_URL=https://srs-webrtc.lst97.dev
-    #   - NODE_ENV=production
     env_file:
       - .env
     networks:
